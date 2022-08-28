@@ -1,17 +1,18 @@
 import Fastify from "fastify";
 import { type Logger } from "pino";
-import { route as routeApi } from "./serverApi";
-import { route as routeHealth } from "./serverHealth";
+import { newRoute as newApiRoute } from "./routeApi";
+import { newRoute as newHealthRoute } from "./routeHealth";
 import { type RPCClient } from "./rpc";
 
 const start = (port: number, rcp: RPCClient, logger: Logger) => {
-  const server = Fastify({ logger });
-  routeApi(server, (method: string, args: unknown[]) => {
-    return rcp.request({ method, args });
-  });
-  routeHealth(server);
-
-  server.listen({ port });
+  const fastify = Fastify({ logger });
+  fastify.register(
+    newApiRoute((method: string, args: unknown[]) => {
+      return rcp.request({ method, args });
+    })
+  );
+  fastify.register(newHealthRoute());
+  fastify.listen({ port });
 };
 
 export { start };
