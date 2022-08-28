@@ -62,7 +62,7 @@ export class ManifestManager {
   async install(): Promise<void> {
     const dir = path.dirname(this.manifestPath);
     await fs.promises.mkdir(dir, { recursive: true });
-    const fullpath = path.join(dir,  `${APP_NAME}.json`);
+    const fullpath = path.join(dir, `${APP_NAME}.json`);
     await fs.promises.writeFile(
       fullpath,
       getNativeMessageManifestJson(this.binPath)

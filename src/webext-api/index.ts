@@ -1,3 +1,3 @@
-import { methodExists, validateArgs, ValidationError } from "./validation"
+import { methodExists, validateArgs, ValidationError } from "./validation";
 
 export { methodExists, validateArgs, ValidationError };

@@ -7,7 +7,7 @@ type Options = {
   port: number;
   stdin: Readable;
   stdout: Writable;
-  logger: Logger,
+  logger: Logger;
 };
 
 export class Application {
@@ -28,7 +28,7 @@ export class Application {
       const err = new Error("stdio closed");
       this.opts.logger.fatal(err);
       throw err;
-    })
+    });
     startServer(this.opts.port, this.rpc, this.opts.logger);
   }
 }

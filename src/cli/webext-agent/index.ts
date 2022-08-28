@@ -36,7 +36,9 @@ program
   .action(install);
 program
   .command("uninstall")
-  .description("Uninstall the installed native messaging manifest from the local")
+  .description(
+    "Uninstall the installed native messaging manifest from the local"
+  )
   .action(uninstall);
 program
   .command("check")

@@ -8,9 +8,9 @@ fastify.register(
     if (method === "tabs.get") {
       return { id: args[0], title: "Hello!" };
     } else if (method === "tabs.query") {
-      throw new Error("tabs.query does not work")
+      throw new Error("tabs.query does not work");
     }
-    throw new Error("unsupported operation: " + method)
+    throw new Error("unsupported operation: " + method);
   })
 );
 
@@ -44,7 +44,9 @@ test("should returns 400 on invalid body", async () => {
   });
 
   expect(resp.statusCode).toBe(400);
-  expect(JSON.parse(resp.body).message).toEqual(expect.stringMatching("minArgs"));
+  expect(JSON.parse(resp.body).message).toEqual(
+    expect.stringMatching("minArgs")
+  );
 });
 
 test("should returns 500 on invalid body", async () => {
@@ -55,5 +57,7 @@ test("should returns 500 on invalid body", async () => {
   });
 
   expect(resp.statusCode).toBe(500);
-  expect(JSON.parse(resp.body).message).toEqual(expect.stringMatching("tabs.query does not work"));
+  expect(JSON.parse(resp.body).message).toEqual(
+    expect.stringMatching("tabs.query does not work")
+  );
 });

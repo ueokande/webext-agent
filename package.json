@@ -9,8 +9,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint --ext .ts",
-    "lint:fix": "eslint --ext .ts --fix"
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts --fix ."
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
