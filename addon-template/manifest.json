@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "webext-agent",
+  "description": "An agent to invoke WebExtensions APIs via remote",
+  "version": "0.0.1",
+  "applications": {
+    "gecko": {
+      "id": "{daf44bf7-a45e-4450-979c-91cf07434c3d}"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "nativeMessaging"
+  ]
+}
