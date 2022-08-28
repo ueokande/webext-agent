@@ -16,7 +16,7 @@ export const handler = (callback: Callback) => {
   ) => {
     const { methodFullName } = req.params;
     if (!methodExists(methodFullName)) {
-      reply.status(404).send({ message: `${methodFullName} not supported` });
+      reply.status(404).send({ message: `${methodFullName}() not supported` });
       return;
     }
 

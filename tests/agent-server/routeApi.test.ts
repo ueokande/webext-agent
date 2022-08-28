@@ -33,7 +33,9 @@ test("should returns 404 on invalid method", async () => {
   });
 
   expect(resp.statusCode).toBe(404);
-  expect(JSON.parse(resp.body).message).toEqual("tabs.harakiri not supported");
+  expect(JSON.parse(resp.body).message).toEqual(
+    "tabs.harakiri() not supported"
+  );
 });
 
 test("should returns 400 on invalid body", async () => {
@@ -45,7 +47,7 @@ test("should returns 400 on invalid body", async () => {
 
   expect(resp.statusCode).toBe(400);
   expect(JSON.parse(resp.body).message).toEqual(
-    expect.stringMatching("minArgs")
+    expect.stringMatching("tabs.get()")
   );
 });
 

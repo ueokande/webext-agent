@@ -34,7 +34,7 @@ const methodArgs = (fullMethodName: string): MethodArgs => {
   }
   const args = ns[methodName];
   if (typeof args === "undefined") {
-    throw new Error(`method ${fullMethodName} not found`);
+    throw new Error(`${fullMethodName} not found`);
   }
   return args;
 };
@@ -43,12 +43,12 @@ export const validateArgs = (fullMethodName: string, numArgs: number): void => {
   const { minArgs, maxArgs } = methodArgs(fullMethodName);
   if (numArgs < minArgs) {
     throw new ValidationError(
-      `method ${fullMethodName} expected minArgs is ${minArgs} but actual is ${numArgs}`
+      `${fullMethodName}() expected the minimum number of arguments ${minArgs} but actual is ${numArgs}`
     );
   }
   if (maxArgs < numArgs) {
     throw new ValidationError(
-      `method ${fullMethodName} expected maxArgs is ${maxArgs} but actual is ${numArgs}`
+      `${fullMethodName}() expected the maxium number of arguments is ${maxArgs} but actual is ${numArgs}`
     );
   }
 };
