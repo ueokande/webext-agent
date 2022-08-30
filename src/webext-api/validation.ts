@@ -1,4 +1,5 @@
-import metadata from "./api-metadata.json";
+import ApiMetadata from "./api-metadata.json";
+import { getAllMethods } from "./metadata";
 
 export class ValidationError extends Error {}
 
@@ -7,19 +8,13 @@ type MethodArgs = {
   maxArgs: number;
 };
 
-type Metadata = typeof metadata;
+type Metadata = typeof ApiMetadata;
 type NamespaceName = keyof Metadata;
 
-const allMethodNames = new Set(
-  Object.entries(metadata)
-    .map(([namespaces, methods]) =>
-      Object.keys(methods).map((method) => namespaces + "." + method)
-    )
-    .flat()
-);
+const allMethods = new Set(getAllMethods());
 
 export const methodExists = (fullMethodName: string): boolean => {
-  return allMethodNames.has(fullMethodName);
+  return allMethods.has(fullMethodName);
 };
 
 const methodArgs = (fullMethodName: string): MethodArgs => {
@@ -28,7 +23,7 @@ const methodArgs = (fullMethodName: string): MethodArgs => {
     throw new Error(`invalid method name: ${fullMethodName}`);
   }
   const [namespaceName, methodName] = words;
-  const ns = metadata[namespaceName as NamespaceName] as any;
+  const ns = ApiMetadata[namespaceName as NamespaceName] as any;
   if (typeof ns === "undefined") {
     throw new Error(`namespace ${namespaceName} not found`);
   }
