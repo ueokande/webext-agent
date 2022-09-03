@@ -4,7 +4,7 @@ import path from "node:path";
 import { ManifestManager } from "../../browser/firefox";
 
 const platform = process.platform;
-const binPath = path.join(__dirname, "..", "..", "..", "bin", "agent-server");
+const binPath = path.join(__dirname, "..", "..", "..", "bin", "agent-server.js");
 
 if (platform !== "linux" && platform !== "darwin") {
   throw new Error("unsupported platform: " + platform);

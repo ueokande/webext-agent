@@ -1,6 +1,5 @@
-import { type FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { type FastifyInstance, FastifyRequest } from "fastify";
 import { RequestSchema, type RequestType, ErrorSchema } from "./schema";
-import { methodExists, validateArgs, ValidationError } from "../webext-api";
 
 type Callback = (method: string, args: unknown[]) => void;
 
@@ -12,24 +11,9 @@ export const handler = (callback: Callback) => {
         methodFullName: string;
       };
     }>,
-    reply: FastifyReply
   ) => {
     const { methodFullName } = req.params;
-    if (!methodExists(methodFullName)) {
-      reply.status(404).send({ message: `${methodFullName}() not supported` });
-      return;
-    }
-
     const { args } = req.body;
-    try {
-      validateArgs(methodFullName, args.length);
-    } catch (e) {
-      if (e instanceof ValidationError) {
-        reply.status(400).send({ message: e.message });
-      }
-      throw e;
-    }
-
     return callback(methodFullName, args);
   };
 };

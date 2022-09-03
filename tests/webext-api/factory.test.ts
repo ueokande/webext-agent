@@ -8,11 +8,11 @@ describe("createAPIs", () => {
 
     expect(await apis.tabs.query({ currentWindow: true })).toEqual({
       method: "tabs.query",
-      args: { currentWindow: true },
+      args: [{ currentWindow: true }],
     });
     expect(await apis.bookmarks.create({ title: "my item" })).toEqual({
       method: "bookmarks.create",
-      args: { title: "my item" },
+      args: [{ title: "my item" }],
     });
   });
 });

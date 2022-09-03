@@ -16,6 +16,7 @@ const createRemoteAPIs = (address: string | AddressInfo) => {
     addr = `${address.address}:${address.port}`;
   }
   return createAPIs(async (method, args) => {
+    console.log(method, args);
     try {
       const url = `http://${addr}/api/${method}`;
       const json = { args };

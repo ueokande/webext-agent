@@ -30,9 +30,11 @@ test("should invoke WebExtensions APIs remotely", async () => {
 
   expect(capture?.url).toEqual("/api/bookmarks.create");
   expect(capture?.body).toEqual({
-    args: {
-      title: "my item",
-      url: "https://example.com/",
-    },
+    args: [
+      {
+        title: "my item",
+        url: "https://example.com/",
+      },
+    ],
   });
 });
