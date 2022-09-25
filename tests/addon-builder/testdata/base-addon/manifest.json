@@ -1,0 +1,13 @@
+{
+  "name": "base-addon",
+  "description": "this is a base addon",
+  "version": "1.0.0",
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "tabs"
+  ]
+}

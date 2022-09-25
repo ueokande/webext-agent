@@ -1,8 +1,7 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-
-const TEMPLATE_ROOT = path.join(__dirname, "../../addon-template");
+import { addonGeckoId } from "../addon-builder/manifest";
 
 const APP_NAME = "demo.ueokande.webext_agent";
 
@@ -17,19 +16,12 @@ type NativeMessageManifest = {
 const getNativeMessageManifest = async (
   binPath: string
 ): Promise<NativeMessageManifest> => {
-  const manifest = await fs.promises.readFile(
-    path.join(TEMPLATE_ROOT, "manifest.json")
-  );
-  const manifestGeckoID = JSON.parse(manifest.toString()).applications.gecko.id;
-  if (typeof manifestGeckoID === "undefined") {
-    throw new Error("manifest.json does not define applications.gecko.id");
-  }
   return {
     name: APP_NAME,
     description: "webext-agent",
     path: binPath,
     type: "stdio",
-    allowed_extensions: [manifestGeckoID],
+    allowed_extensions: [addonGeckoId()],
   };
 };
 

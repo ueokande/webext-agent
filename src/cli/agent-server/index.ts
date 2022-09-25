@@ -31,7 +31,12 @@ You can see server logs at the following path:
 
 const app = new Application({
   port,
-  logger: pino(pino.destination(logPath)),
+  logger: pino(
+    {
+      timestamp: pino.stdTimeFunctions.isoTime,
+    },
+    pino.destination(logPath)
+  ),
   stdin: process.stdin,
   stdout: process.stdout,
 });

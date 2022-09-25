@@ -1,4 +1,14 @@
-import { createRemoteAPIs } from "./webext-api/http";
-import { createAgentAddon } from "./addon-builder/addon";
+import { createRemoteAPIs, connect } from "./webext-api/http";
+import {
+  createAgentAddon,
+  createMixedInAgentAddon,
+  Addon,
+} from "./addon-builder/addon";
 
-export { createRemoteAPIs, createAgentAddon };
+export {
+  createRemoteAPIs,
+  connect,
+  createAgentAddon,
+  createMixedInAgentAddon,
+  Addon,
+};

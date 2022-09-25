@@ -24,11 +24,6 @@ export class Application {
     this.rpc.on("error", (err: Error) => {
       this.opts.logger.error(err);
     });
-    this.rpc.on("close", () => {
-      const err = new Error("stdio closed");
-      this.opts.logger.fatal(err);
-      throw err;
-    });
     startServer(this.opts.port, this.rpc, this.opts.logger);
   }
 }
