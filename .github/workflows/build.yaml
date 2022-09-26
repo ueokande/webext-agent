@@ -15,4 +15,6 @@ jobs:
         cache: 'yarn'
     - run: yarn install --frozen-lockfile
     - run: yarn lint
+    - run: yarn build
+    - run: ./bin/webext-agent.js install
     - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
