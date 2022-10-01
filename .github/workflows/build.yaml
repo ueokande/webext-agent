@@ -18,3 +18,30 @@ jobs:
     - run: yarn build
     - run: ./bin/webext-agent.js install
     - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
+
+  publish:
+    name: Publish to NPM
+    if: github.ref == 'refs/heads/master'
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: google-github-actions/release-please-action@v3
+      id: release
+      with:
+        command: manifest
+    - uses: actions/checkout@v3
+      if: ${{ steps.release.outputs.release_created }}
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'yarn'
+        registry-url: 'https://registry.npmjs.org'
+      if: ${{ steps.release.outputs.release_created }}
+    - run: yarn install --frozen-lockfile
+      if: ${{ steps.release.outputs.release_created }}
+    - run: yarn build
+      if: ${{ steps.release.outputs.release_created }}
+    - run: yarn publish --new-version $(jq -r .version <package.json)
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      if: ${{ steps.release.outputs.release_created }}
