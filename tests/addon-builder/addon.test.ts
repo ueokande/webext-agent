@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import * as os from "node:os";
 import * as path from "node:path";
 import {
   createAgentAddon,
@@ -11,17 +12,20 @@ const UUIDJSPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.js$/;
 
 describe("Addon", () => {
-  const addon = new TemporaryAddon("/tmp/foo");
+  const addonRoot = path.join(os.tmpdir(), "my-addon");
+  const addon = new TemporaryAddon(addonRoot);
 
   describe("root", () => {
     test("should return a root directory", () => {
-      expect(addon.getRoot()).toBe("/tmp/foo");
+      expect(addon.getRoot()).toBe(addonRoot);
     });
   });
 
   describe("getPath", () => {
     test("should return a path of the file", () => {
-      expect(addon.getPath("manifest.json")).toBe("/tmp/foo/manifest.json");
+      expect(addon.getPath("manifest.json")).toBe(
+        path.join(addonRoot, "manifest.json")
+      );
     });
   });
 });
