@@ -39,6 +39,7 @@
     "axios": "^0.27.2",
     "commander": "^9.4.0",
     "fastify": "^4.5.3",
+    "regedit": "5.0.0",
     "uuid": "^8.3.2"
   },
   "bin": {

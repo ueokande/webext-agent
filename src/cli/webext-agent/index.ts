@@ -1,37 +1,32 @@
 import { program } from "commander";
-import path from "node:path";
-
-import { ManifestManager } from "../../browser/firefox";
-
-const platform = process.platform;
-const binPath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  "bin",
-  "agent-server.js"
-);
-
-if (platform !== "linux" && platform !== "darwin") {
-  throw new Error("unsupported platform: " + platform);
-}
-const manager = new ManifestManager(platform, binPath);
-const manifestPath = manager.getManifestPath();
+import { createManager } from "../../browser/firefox";
+import { resolveBinPath } from "../../browser/npm";
 
 const install = async () => {
+  const manager = createManager(process.platform, await resolveBinPath());
   await manager.install();
-  console.error("Installed native message manifest at", manifestPath);
+  console.error(
+    "Installed native message manifest at",
+    manager.getManifestPath()
+  );
 };
 
 const uninstall = async () => {
+  const manager = createManager(process.platform, await resolveBinPath());
   await manager.uninstall();
-  console.error("Uninstalled native message manifest from", manifestPath);
+  console.error(
+    "Uninstalled native message manifest from",
+    manager.getManifestPath()
+  );
 };
 
 const check = async () => {
+  const manager = createManager(process.platform, await resolveBinPath());
   if (await manager.test()) {
-    console.log("The native message manifest is installed at", manifestPath);
+    console.log(
+      "The native message manifest is installed at",
+      manager.getManifestPath()
+    );
   } else {
     console.log("The native message manifest is not installed");
   }
