@@ -43,8 +43,8 @@
     "uuid": "^8.3.2"
   },
   "bin": {
-    "webext-agent": "./bin/webext-agent",
-    "agent-server": "./bin/agent-server"
+    "webext-agent": "./bin/webext-agent.js",
+    "agent-server": "./bin/agent-server.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
