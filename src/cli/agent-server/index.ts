@@ -1,10 +1,11 @@
+import * as os from "node:os";
+import path from "node:path";
 import { program } from "commander";
 import { Application } from "../../agent-server";
 import pino from "pino";
-import path from "node:path";
 
 const defaultPort = 12345;
-const logPath = path.resolve("/tmp/webext-agent.log");
+const logPath = path.join(os.tmpdir(), "webext-agent.log");
 
 program.option(
   "-p, --port <number>",
