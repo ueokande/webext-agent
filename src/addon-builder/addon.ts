@@ -1,4 +1,3 @@
-import * as os from "node:os";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { v4 as uuidv4 } from "uuid";
@@ -9,8 +8,6 @@ export interface Addon {
   getRoot(): string;
 
   getPath(file: string): string;
-
-  clean(): Promise<void>;
 }
 
 class TemporaryAddon implements Addon {
@@ -23,42 +20,46 @@ class TemporaryAddon implements Addon {
   getPath(file: string): string {
     return path.join(this.rootDir, file);
   }
-
-  async clean(): Promise<void> {
-    await fs.promises.rm(this.rootDir, { recursive: true });
-  }
 }
 
 type AddonOptions = {
   additionalPermissions?: string[];
 };
 
-const createAgentAddon = async ({
-  additionalPermissions = [],
-}: AddonOptions = {}): Promise<Addon> => {
+const createAgentAddon = async (
+  destDir: string,
+  { additionalPermissions = [] }: AddonOptions = {}
+): Promise<Addon> => {
+  if (fs.existsSync(destDir)) {
+    await fs.promises.rm(destDir, { recursive: true });
+  }
+  await fs.promises.mkdir(destDir, { recursive: true });
+
   const agentBackgroundScriptName = `${uuidv4()}.js`;
-  const root = await fs.promises.mkdtemp(
-    path.join(os.tmpdir(), "webext-agent-addon-")
-  );
   const manifest = buildManifest({
     agentBackgroundScriptName,
     additionalPermissions,
   });
   await fs.promises.copyFile(
     getTemplatePath(),
-    path.join(root, agentBackgroundScriptName)
+    path.join(destDir, agentBackgroundScriptName)
   );
   await fs.promises.writeFile(
-    path.join(root, "manifest.json"),
+    path.join(destDir, "manifest.json"),
     JSON.stringify(manifest, null, 2)
   );
-  return new TemporaryAddon(root);
+  return new TemporaryAddon(destDir);
 };
 
 const createMixedInAgentAddon = async (
   baseAddonDir: string,
+  destDir: string,
   { additionalPermissions }: AddonOptions = {}
 ): Promise<Addon> => {
+  if (fs.existsSync(destDir)) {
+    await fs.promises.rm(destDir, { recursive: true });
+  }
+
   // read a base manifest at first due to check if manifest.json exists
   const baseManifest = JSON.parse(
     await fs.promises.readFile(
@@ -68,24 +69,20 @@ const createMixedInAgentAddon = async (
   );
 
   const agentBackgroundScriptName = `${uuidv4()}.js`;
-  const root = await fs.promises.mkdtemp(
-    path.join(os.tmpdir(), "webext-agent-addon-")
-  );
-
   const manifest = buildMixedInManifest(baseManifest, {
     agentBackgroundScriptName,
     additionalPermissions,
   });
-  await fs.promises.cp(baseAddonDir, root, { recursive: true });
+  await fs.promises.cp(baseAddonDir, destDir, { recursive: true });
   await fs.promises.copyFile(
     getTemplatePath(),
-    path.join(root, agentBackgroundScriptName)
+    path.join(destDir, agentBackgroundScriptName)
   );
   await fs.promises.writeFile(
-    path.join(root, "manifest.json"),
+    path.join(destDir, "manifest.json"),
     JSON.stringify(manifest, null, 2)
   );
-  return new TemporaryAddon(root);
+  return new TemporaryAddon(destDir);
 };
 
 export { createAgentAddon, createMixedInAgentAddon, TemporaryAddon };

@@ -34,11 +34,16 @@ describe("createAgentAddon", () => {
   let addon: Addon;
 
   beforeEach(async () => {
-    addon = await createAgentAddon({ additionalPermissions: ["bookmarks"] });
+    const root = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), "webext-agent-addon-")
+    );
+    addon = await createAgentAddon(root, {
+      additionalPermissions: ["bookmarks"],
+    });
   });
 
-  afterEach(() => {
-    addon.clean();
+  afterEach(async () => {
+    await fs.promises.rm(addon.getRoot(), { recursive: true });
   });
 
   test("should create a new agent addon", async () => {
@@ -68,14 +73,18 @@ describe("createMixedInAgentAddon", () => {
   let addon: Addon;
 
   beforeEach(async () => {
+    const root = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), "webext-agent-addon-")
+    );
     addon = await createMixedInAgentAddon(
       path.join(__dirname, "testdata/base-addon"),
+      root,
       { additionalPermissions: ["bookmarks"] }
     );
   });
 
-  afterEach(() => {
-    addon.clean();
+  afterEach(async () => {
+    await fs.promises.rm(addon.getRoot(), { recursive: true });
   });
 
   test("should create a mixed-in agent addon", async () => {
