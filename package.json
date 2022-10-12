@@ -10,7 +10,7 @@
     "test": "jest",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --ext .ts --fix .",
-    "run:webext-agent": "ts-node src/cli/webext-agent",
+    "run:webext-agent": "ts-node --files src/cli/webext-agent",
     "run:agent-server": "ts-node src/cli/agent-server"
   },
   "devDependencies": {

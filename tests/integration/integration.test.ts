@@ -1,27 +1,30 @@
+import * as os from "node:os";
+import * as fs from "node:fs";
 import * as path from "node:path";
 import { firefox, Browser } from "playwright";
 import { withExtension } from "playwright-webextext";
-import {
-  createAgentAddon,
-  createMixedInAgentAddon,
-  connect,
-  type Addon,
-} from "../../src";
+import { createAgentAddon, createMixedInAgentAddon, connect } from "../../src";
 
 describe("bare agent addon", () => {
-  let addon: Addon;
+  let root: string;
   let browserContext: Browser;
 
   beforeEach(async () => {
-    addon = await createAgentAddon({ additionalPermissions: ["tabs"] });
+    root = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), "webext-agent-addon-")
+    );
+
+    const addon = await createAgentAddon(root, {
+      additionalPermissions: ["tabs"],
+    });
 
     const browserTypeWithExtension = withExtension(firefox, addon.getRoot());
     browserContext = await browserTypeWithExtension.launch();
   });
 
   afterEach(async () => {
-    await addon.clean();
     await browserContext.close();
+    await fs.promises.rm(root, { recursive: true });
   });
 
   test("firefox starts with a bare agent addon", async () => {
@@ -37,12 +40,16 @@ describe("bare agent addon", () => {
 });
 
 describe("mixed-in agent addon", () => {
-  let addon: Addon;
+  let root: string;
   let browserContext: Browser;
 
   beforeEach(async () => {
-    addon = await createMixedInAgentAddon(
-      path.join(__dirname, "testdata/deadbeef-addon")
+    root = await fs.promises.mkdtemp(
+      path.join(os.tmpdir(), "webext-agent-addon-")
+    );
+    const addon = await createMixedInAgentAddon(
+      path.join(__dirname, "testdata/deadbeef-addon"),
+      root
     );
 
     const browserTypeWithExtension = withExtension(firefox, addon.getRoot());
@@ -50,8 +57,8 @@ describe("mixed-in agent addon", () => {
   });
 
   afterEach(async () => {
-    await addon.clean();
     await browserContext.close();
+    await fs.promises.rm(root, { recursive: true });
   });
 
   test("firefox starts with a mixed-in addon", async () => {
