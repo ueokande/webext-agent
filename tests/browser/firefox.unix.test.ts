@@ -16,7 +16,7 @@ maybe("UnixManager", () => {
   });
 
   afterEach(async () => {
-    await fs.promises.rmdir(tmpdir, { recursive: true });
+    await fs.promises.rm(tmpdir, { recursive: true });
   });
 
   test("install and uninstall a native message manifest", async () => {
