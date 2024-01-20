@@ -9,7 +9,7 @@ describe("buildManifest", () => {
 
   test("should generate an addon manifest", () => {
     const manifest = buildManifest({ agentBackgroundScriptName });
-    expect(manifest.manifest_version).toBe(2);
+    expect(manifest.manifest_version).toBe(3);
     expect(manifest.name).toBe("webext-agent");
     expect(manifest.background).toEqual({
       scripts: [agentBackgroundScriptName],
@@ -22,7 +22,7 @@ describe("buildManifest", () => {
       agentBackgroundScriptName,
       additionalPermissions: ["bookmarks"],
     });
-    expect(manifest.manifest_version).toBe(2);
+    expect(manifest.manifest_version).toBe(3);
     expect(manifest.name).toBe("webext-agent");
     expect(manifest.background).toEqual({
       scripts: [agentBackgroundScriptName],
@@ -36,7 +36,7 @@ describe("buildMixedInManifest", () => {
 
   test("should override manifest properties", () => {
     const baseManifest = {
-      manifest_version: 2,
+      manifest_version: 3,
       name: "my-addon",
       version: "1.0.0",
       applications: {
@@ -53,7 +53,7 @@ describe("buildMixedInManifest", () => {
     const manifest = buildMixedInManifest(baseManifest, {
       agentBackgroundScriptName,
     });
-    expect(manifest.manifest_version).toBe(2);
+    expect(manifest.manifest_version).toBe(3);
     expect(manifest.background).toEqual({
       scripts: ["my-script.js", agentBackgroundScriptName],
     });

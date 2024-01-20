@@ -2,11 +2,11 @@ type WebExtensionManifest = ReturnType<typeof browser.runtime.getManifest>;
 type Permissions = WebExtensionManifest["permissions"];
 
 const DEFAULT_MANIFEST = {
-  manifest_version: 2,
+  manifest_version: 3,
   name: "webext-agent",
   description: "An agent to invoke WebExtensions APIs via remote",
   version: "0.0.1",
-  applications: {
+  browser_specific_settings: {
     gecko: {
       id: "{daf44bf7-a45e-4450-979c-91cf07434c3d}",
     },
@@ -47,21 +47,21 @@ const buildMixedInManifest = (
       : []
     ).concat(agentBackgroundScriptName),
   };
-  const applications = {
-    ...baseManifest.applications,
+  const browser_specific_settings = {
+    ...baseManifest.browser_specific_settings,
     gecko: {
-      id: DEFAULT_MANIFEST.applications.gecko.id,
+      id: DEFAULT_MANIFEST.browser_specific_settings.gecko.id,
     },
   };
   const manifest: WebExtensionManifest = {
     ...baseManifest,
-    applications,
+    browser_specific_settings,
     background,
     permissions,
   };
   return manifest;
 };
 
-const addonGeckoId = () => DEFAULT_MANIFEST.applications.gecko.id;
+const addonGeckoId = () => DEFAULT_MANIFEST.browser_specific_settings.gecko.id;
 
 export { buildManifest, buildMixedInManifest, addonGeckoId };
