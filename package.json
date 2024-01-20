@@ -5,6 +5,9 @@
   "repository": "https://github.com/ueokande/webext-agent",
   "author": "Shin'ya Ueoka <ueokande@i-beam.org>",
   "license": "MIT",
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
