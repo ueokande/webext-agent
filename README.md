@@ -9,16 +9,15 @@ testing.
 Install by npm:
 
 ```console
-$ npm install --save webext-agent
+$ npm install --save webext-agent  # npm
+$ yarn add webext-agent            # yarn
+$ pnpx webext-agent install        # pnpm
 ```
 
-or install with yarn:
+Then install the native messaging manifest to the local:
 
 ```console
-$ yarn add webext-agent
-```
-```console
-$ webext-agent install
+$ ./node_modules/.bin/webext-agent install
 ```
 
 ## Quick start
