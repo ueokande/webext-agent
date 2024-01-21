@@ -7,10 +7,10 @@ settings:
 dependencies:
   '@fastify/type-provider-typebox':
     specifier: ^2.3.0
-    version: 2.3.0(@sinclair/typebox@0.24.28)(fastify@4.5.3)
+    version: 2.3.0(@sinclair/typebox@0.24.51)(fastify@4.5.3)
   '@sinclair/typebox':
-    specifier: ^0.24.28
-    version: 0.24.28
+    specifier: ^0.24.51
+    version: 0.24.51
   '@types/firefox-webext-browser':
     specifier: ^94.0.1
     version: 94.0.1
@@ -504,13 +504,13 @@ packages:
       fast-json-stringify: 5.1.0
     dev: false
 
-  /@fastify/type-provider-typebox@2.3.0(@sinclair/typebox@0.24.28)(fastify@4.5.3):
+  /@fastify/type-provider-typebox@2.3.0(@sinclair/typebox@0.24.51)(fastify@4.5.3):
     resolution: {integrity: sha512-arEH1FL6CNTgctoVw++jNPJN9DdzUe7rJlb3XJyw7rAGiT2m402P4GMFVhtDqndQzEJN37UJXVYbCR9D0AahgQ==}
     peerDependencies:
       '@sinclair/typebox': ^0.24.1
       fastify: ^4.0.0
     dependencies:
-      '@sinclair/typebox': 0.24.28
+      '@sinclair/typebox': 0.24.51
       fastify: 4.5.3
     dev: false
 
@@ -843,8 +843,8 @@ packages:
       playwright: 1.41.1
     dev: true
 
-  /@sinclair/typebox@0.24.28:
-    resolution: {integrity: sha512-dgJd3HLOkLmz4Bw50eZx/zJwtBq65nms3N9VBYu5LTjJ883oBFkTyXRlCB/ZGGwqYpJJHA5zW2Ibhl5ngITfow==}
+  /@sinclair/typebox@0.24.51:
+    resolution: {integrity: sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==}
     dev: false
 
   /@sinclair/typebox@0.27.8:

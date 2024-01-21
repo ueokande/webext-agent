@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@fastify/type-provider-typebox": "^2.3.0",
-    "@sinclair/typebox": "^0.24.28",
+    "@sinclair/typebox": "^0.24.51",
     "@types/firefox-webext-browser": "^94.0.1",
     "@types/uuid": "^8.3.4",
     "axios": "^1.6.5",
