@@ -9,12 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
     - uses: actions/setup-node@v3
       with:
         node-version-file: 'package.json'
-        cache: 'yarn'
-    - run: yarn install --frozen-lockfile
-    - run: yarn lint
+        cache: pnpm
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run lint
 
   test:
     strategy:
@@ -24,20 +25,21 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
     - uses: actions/setup-node@v3
       with:
         node-version-file: 'package.json'
-        cache: 'yarn'
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
+        cache: pnpm
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build
     - name: install webext-agent locally
       run: |
-        yarn pack --filename webext-agent-latest.tgz
-        npm install --global webext-agent-latest.tgz
+        pnpm pack
+        npm install --global webext-agent-*.tgz
     - run: webext-agent install
-    - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn test
+    - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test
       if: runner.os == 'Linux'
-    - run: yarn test
+    - run: pnpm run test
       if: runner.os != 'Linux'
 
   publish:
@@ -52,17 +54,19 @@ jobs:
         command: manifest
     - uses: actions/checkout@v3
       if: ${{ steps.release.outputs.release_created }}
+    - uses: pnpm/action-setup@v2
+      if: ${{ steps.release.outputs.release_created }}
     - uses: actions/setup-node@v3
       with:
         node-version-file: 'package.json'
-        cache: 'yarn'
+        cache: pnpm
         registry-url: 'https://registry.npmjs.org'
       if: ${{ steps.release.outputs.release_created }}
-    - run: yarn install --frozen-lockfile
+    - run: pnpm install --frozen-lockfile
       if: ${{ steps.release.outputs.release_created }}
-    - run: yarn build
+    - run: pnpm run build
       if: ${{ steps.release.outputs.release_created }}
-    - run: yarn publish --new-version $(jq -r .version <package.json)
+    - run: pnpm publish --new-version $(jq -r .version <package.json)
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       if: ${{ steps.release.outputs.release_created }}
