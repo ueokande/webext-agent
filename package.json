@@ -17,7 +17,7 @@
     "run:agent-server": "ts-node src/cli/agent-server"
   },
   "devDependencies": {
-    "@playwright/test": "^1.26.0",
+    "@playwright/test": "^1.41.1",
     "@types/jest": "^29.5.11",
     "@types/node": "^18.7.11",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
