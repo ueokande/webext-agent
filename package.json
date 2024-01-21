@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --runInBand",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --ext .ts --fix .",
     "run:webext-agent": "ts-node --files src/cli/webext-agent",
