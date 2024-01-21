@@ -9,3 +9,35 @@ updates:
   commit-message:
     prefix: "fix(deps)"
     prefix-development: 'chore(deps):'
+  groups:
+    typescript:
+      patterns:
+        - "typescript"
+        - "@typescript-*"
+        - "ts-node"
+    eslint:
+      patterns:
+        - "eslint"
+        - "eslint-*"
+        - "prettier"
+        - "prettier-*"
+    playwright:
+      patterns:
+        - "playwright"
+        - "playwright-*"
+        - "@playwright/*"
+    jest:
+      patterns:
+        - "jest"
+        - "jest-*"
+        - "@jest/*"
+        - "@types/jest"
+        - "ts-jest"
+    fastify:
+      patterns:
+        - "fastify"
+        - "@fastify/*"
+    uuid:
+      patterns:
+        - "uuid"
+        - "@types/uuid"
