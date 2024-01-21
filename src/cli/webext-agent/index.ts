@@ -1,13 +1,13 @@
 import { program } from "commander";
 import { createManager } from "../../browser/firefox";
-import { resolveBinPath } from "../../browser/npm";
+import { resolveAgentServer } from "../../browser/cjs";
 import {
   createAgentAddon,
   createMixedInAgentAddon,
 } from "../../addon-builder/addon";
 
 const install = async () => {
-  const manager = createManager(process.platform, await resolveBinPath());
+  const manager = createManager(process.platform, await resolveAgentServer());
   await manager.install();
   console.error(
     "Installed native message manifest at",
@@ -16,7 +16,7 @@ const install = async () => {
 };
 
 const uninstall = async () => {
-  const manager = createManager(process.platform, await resolveBinPath());
+  const manager = createManager(process.platform, await resolveAgentServer());
   await manager.uninstall();
   console.error(
     "Uninstalled native message manifest from",
@@ -25,7 +25,7 @@ const uninstall = async () => {
 };
 
 const check = async () => {
-  const manager = createManager(process.platform, await resolveBinPath());
+  const manager = createManager(process.platform, await resolveAgentServer());
   if (await manager.test()) {
     console.log(
       "The native message manifest is installed at",
