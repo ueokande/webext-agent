@@ -15,7 +15,7 @@ export const newRoute = () => {
           },
         },
       },
-      handle
+      handle,
     );
   };
 };

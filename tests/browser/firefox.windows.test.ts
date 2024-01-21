@@ -26,7 +26,7 @@ maybe("WindowsManager", () => {
     expect(item.value).toMatch(/^C:\\.*.json$/);
 
     expect(await fs.promises.readFile(item.value as string, "utf-8")).toContain(
-      binPath.replace(/\\/g, "\\\\")
+      binPath.replace(/\\/g, "\\\\"),
     );
 
     await manager.uninstall();

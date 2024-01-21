@@ -11,7 +11,7 @@ export const handler = (callback: Callback) => {
         methodFullName: string;
       };
     }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { methodFullName } = req.params;
     const { args } = req.body;
@@ -41,7 +41,7 @@ export const newRoute = (callback: Callback) => {
           },
         },
       },
-      handler(callback)
+      handler(callback),
     );
   };
 };

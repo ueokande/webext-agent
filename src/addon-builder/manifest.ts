@@ -35,7 +35,7 @@ const buildManifest = ({
 
 const buildMixedInManifest = (
   baseManifest: WebExtensionManifest,
-  { additionalPermissions = [], agentBackgroundScriptName }: manifestOptions
+  { additionalPermissions = [], agentBackgroundScriptName }: manifestOptions,
 ): WebExtensionManifest => {
   const permissions = (baseManifest.permissions ?? [])
     .concat(DEFAULT_MANIFEST.permissions)

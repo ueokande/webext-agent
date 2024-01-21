@@ -11,7 +11,7 @@ const install = async () => {
   await manager.install();
   console.error(
     "Installed native message manifest at",
-    manager.getManifestPath()
+    manager.getManifestPath(),
   );
 };
 
@@ -20,7 +20,7 @@ const uninstall = async () => {
   await manager.uninstall();
   console.error(
     "Uninstalled native message manifest from",
-    manager.getManifestPath()
+    manager.getManifestPath(),
   );
 };
 
@@ -29,7 +29,7 @@ const check = async () => {
   if (await manager.test()) {
     console.log(
       "The native message manifest is installed at",
-      manager.getManifestPath()
+      manager.getManifestPath(),
     );
   } else {
     console.log("The native message manifest is not installed");
@@ -57,7 +57,7 @@ program
 program
   .command("uninstall")
   .description(
-    "Uninstall the installed native messaging manifest from the local"
+    "Uninstall the installed native messaging manifest from the local",
   )
   .action(uninstall);
 program
@@ -70,11 +70,11 @@ program
   .argument("<destination>")
   .option(
     "--base-addon <base-addon>",
-    "The directory containings base addon to be mixed-in"
+    "The directory containings base addon to be mixed-in",
   )
   .option(
     "--additional-permissions <perm1,perm2,...>",
-    "Comma-separated additional permissions"
+    "Comma-separated additional permissions",
   )
   .action(createAddon);
 

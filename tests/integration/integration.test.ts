@@ -11,7 +11,7 @@ describe("bare agent addon", () => {
 
   beforeEach(async () => {
     root = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), "webext-agent-addon-")
+      path.join(os.tmpdir(), "webext-agent-addon-"),
     );
 
     const addon = await createAgentAddon(root, {
@@ -45,11 +45,11 @@ describe("mixed-in agent addon", () => {
 
   beforeEach(async () => {
     root = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), "webext-agent-addon-")
+      path.join(os.tmpdir(), "webext-agent-addon-"),
     );
     const addon = await createMixedInAgentAddon(
       path.join(__dirname, "testdata/deadbeef-addon"),
-      root
+      root,
     );
 
     const browserTypeWithExtension = withExtension(firefox, addon.getRoot());

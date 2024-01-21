@@ -15,7 +15,7 @@ type NativeMessagingManifest = {
 };
 
 const getNativeMessagingManifest = (
-  binPath: string
+  binPath: string,
 ): NativeMessagingManifest => {
   return {
     name: APP_NAME,
@@ -54,7 +54,7 @@ class UnixManager implements NativeMessagingManifestManager {
     const fullpath = path.join(dir, basename);
     await fs.promises.writeFile(
       fullpath,
-      getNativeMessagingManifestJson(this.binPath)
+      getNativeMessagingManifestJson(this.binPath),
     );
   }
 
@@ -86,7 +86,7 @@ class WindowsManager implements NativeMessagingManifestManager {
       "AppData",
       "Local",
       APP_NAME,
-      `${APP_NAME}.json`
+      `${APP_NAME}.json`,
     );
     this.binPath = binPath;
   }
@@ -142,7 +142,7 @@ class WindowsManager implements NativeMessagingManifestManager {
     const fullpath = path.join(dir, `${APP_NAME}.json`);
     await fs.promises.writeFile(
       fullpath,
-      getNativeMessagingManifestJson(this.binPath)
+      getNativeMessagingManifestJson(this.binPath),
     );
   }
 
@@ -169,9 +169,9 @@ const createManager = (platform: string, binPath: string) => {
           os.homedir(),
           ".mozilla",
           "native-messaging-hosts",
-          `${APP_NAME}.json`
+          `${APP_NAME}.json`,
         ),
-        binPath
+        binPath,
       );
     case "darwin":
       return new UnixManager(
@@ -181,9 +181,9 @@ const createManager = (platform: string, binPath: string) => {
           "Application Support",
           "Mozilla",
           "NativeMessagingHosts",
-          `${APP_NAME}.json`
+          `${APP_NAME}.json`,
         ),
-        binPath
+        binPath,
       );
   }
   throw new Error("unsupported platform: " + platform);

@@ -29,11 +29,11 @@ const createRemoteAPIs = (address: string | AddressInfo): Browser => {
         const { status, data } = err.response;
         if (hasMessage(data)) {
           throw new Error(
-            `Server returns ${status} with message: ${data.message}`
+            `Server returns ${status} with message: ${data.message}`,
           );
         }
         throw new Error(
-          `Server returns ${status} with body: ${JSON.stringify(data)}`
+          `Server returns ${status} with body: ${JSON.stringify(data)}`,
         );
       }
       throw err;
@@ -74,11 +74,11 @@ const connect = async (address: string | AddressInfo): Promise<Browser> => {
         const { status, data } = err.response;
         if (hasMessage(data)) {
           throw new Error(
-            `Server returns ${status} with message: ${data.message}`
+            `Server returns ${status} with message: ${data.message}`,
           );
         }
         throw new Error(
-          `Server returns ${status} with body: ${JSON.stringify(data)}`
+          `Server returns ${status} with body: ${JSON.stringify(data)}`,
         );
       }
       throw err;
