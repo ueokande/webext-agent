@@ -15,16 +15,16 @@ const resolveAgentServer = async () => {
   // Look-up the bin path from the global installation.
   if (platform === "win32") {
     // The backage and the bin are installed in the following paths on Windows.
-    // - $(node root)/node_modules/$(module name)
-    // - $(node root)/$(bin name).cmd
+    // - $(prefix)/node_modules/$(module name)
+    // - $(prefix)/$(bin name).cmd
     const bin = path.join(projectRoot, "../..", basename);
     if (await fileExists(bin)) {
       return bin;
     }
   } else {
     // The backage and the bin are installed in the following paths on UNIX.
-    // - $(node root)/lib/node_modules/$(module name)
-    // - $(node root)/bin/$(bin name)
+    // - $(prefix)/lib/node_modules/$(module name)
+    // - $(prefix)/bin/$(bin name)
     const bin = path.join(projectRoot, "../../../bin", basename);
     if (await fileExists(bin)) {
       return bin;
