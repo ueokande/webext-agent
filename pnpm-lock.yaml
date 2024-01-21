@@ -30,8 +30,8 @@ dependencies:
     specifier: ^8.17.2
     version: 8.17.2
   regedit:
-    specifier: 5.0.0
-    version: 5.0.0
+    specifier: 5.1.2
+    version: 5.1.2
   tslib:
     specifier: ^2.6.2
     version: 2.6.2
@@ -3267,8 +3267,8 @@ packages:
     engines: {node: '>= 12.13.0'}
     dev: false
 
-  /regedit@5.0.0:
-    resolution: {integrity: sha512-4uSqj6Injwy5TPtXlE+1F/v2lOW/bMfCqNIAXyib4aG1ZwacG69oyK/yb6EF8KQRMhz7YINxkD+/HHc6i7YJtA==}
+  /regedit@5.1.2:
+    resolution: {integrity: sha512-pQpWqO/I40bMNoMO9kTQx3e5iK542kYcB/Z8X3Y7Hcri6ydc4KZ9ByUsEWFkBRMcwo+2irHuNK5s+pMGPr6VPw==}
     dependencies:
       debug: 4.3.4
       if-async: 3.7.4
