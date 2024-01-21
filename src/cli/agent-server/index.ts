@@ -9,7 +9,7 @@ const logPath = path.join(os.tmpdir(), "webext-agent.log");
 
 program.option(
   "-p, --port <number>",
-  `Port number to be listen on (defualt: ${defaultPort})`
+  `Port number to be listen on (defualt: ${defaultPort})`,
 );
 program.parse();
 
@@ -27,7 +27,7 @@ You can see server logs at the following path:
 
   ${logPath}
 
-`
+`,
 );
 
 const app = new Application({
@@ -36,7 +36,7 @@ const app = new Application({
     {
       timestamp: pino.stdTimeFunctions.isoTime,
     },
-    pino.destination(logPath)
+    pino.destination(logPath),
   ),
   stdin: process.stdin,
   stdout: process.stdout,

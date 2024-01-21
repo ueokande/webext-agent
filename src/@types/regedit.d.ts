@@ -55,7 +55,7 @@ declare module "regedit" {
 
   export type RegistryItemCollection<
     T extends readonly string[],
-    U = { [key in T[number]]: RegistryItem }
+    U = { [key in T[number]]: RegistryItem },
   > = U;
 
   export interface RegistryPutItem {
@@ -78,17 +78,17 @@ declare module "regedit" {
     | typeof OS_ARCH_64BIT;
   type ErrResCallback<T extends readonly string[]> = (
     err: Error | undefined,
-    res: RegistryItemCollection<T>
+    res: RegistryItemCollection<T>,
   ) => void;
 
   export function list<K extends string>(
     keys: readonly K[],
-    callback: ErrResCallback<typeof keys>
+    callback: ErrResCallback<typeof keys>,
   ): void;
   export function list<K extends string>(
     keys: readonly K[],
     architecture: Architecture,
-    callback?: ErrResCallback<typeof keys>
+    callback?: ErrResCallback<typeof keys>,
   ): void;
 
   export function setExternalVBSLocation(newLocation: string): string;
@@ -102,118 +102,118 @@ declare module "regedit" {
 
   export function createKey<K extends string>(
     keys: readonly K[],
-    callback: ErrCallback
+    callback: ErrCallback,
   ): void;
   export function createKey<K extends string>(
     keys: readonly K[],
     architecture: Architecture,
-    callback?: ErrCallback
+    callback?: ErrCallback,
   ): void;
 
   export function deleteKey(
     keys: readonly string[],
-    callback: ErrCallback
+    callback: ErrCallback,
   ): void;
   export function deleteKey(
     keys: readonly string[],
     architecture: Architecture,
-    callback?: ErrCallback
+    callback?: ErrCallback,
   ): void;
 
   export function putValue(
     map: RegistryItemPutCollection,
-    callback: ErrCallback
+    callback: ErrCallback,
   ): void;
   export function putValue(
     map: RegistryItemPutCollection,
     architecture: Architecture,
-    callback?: ErrCallback
+    callback?: ErrCallback,
   ): void;
 
   export namespace arch {
     export function list<K extends string>(
       keys: readonly K[],
-      callback: ErrResCallback<typeof keys>
+      callback: ErrResCallback<typeof keys>,
     ): void;
     export function list32<K extends string>(
       keys: readonly K[],
-      callback: ErrResCallback<typeof keys>
+      callback: ErrResCallback<typeof keys>,
     ): void;
     export function list64<K extends string>(
       keys: readonly K[],
-      callback: ErrResCallback<typeof keys>
+      callback: ErrResCallback<typeof keys>,
     ): void;
     export function createKey(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function createKey32(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function createKey64(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function deleteKey(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function deleteKey32(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function deleteKey64(
       keys: readonly string[],
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function putValue(
       map: RegistryItemPutCollection,
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function putValue32(
       map: RegistryItemPutCollection,
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
     export function putValue64(
       map: RegistryItemPutCollection,
-      callback: ErrCallback
+      callback: ErrCallback,
     ): void;
   }
 
   export namespace promisified {
     export function list<K extends string>(
-      keys: readonly K[]
+      keys: readonly K[],
     ): Promise<RegistryItemCollection<typeof keys>>;
     export function list<K extends string>(
       keys: readonly K[],
-      architecture: Architecture
+      architecture: Architecture,
     ): Promise<RegistryItemCollection<typeof keys>>;
     export function createKey(keys: readonly string[]): Promise<void>;
     export function createKey(
       keys: readonly string[],
-      architecture: Architecture
+      architecture: Architecture,
     ): Promise<void>;
     export function deleteKey(keys: readonly string[]): Promise<void>;
     export function deleteKey(
       keys: readonly string[],
-      architecture: Architecture
+      architecture: Architecture,
     ): Promise<void>;
     export function putValue(map: RegistryItemPutCollection): Promise<void>;
     export function putValue(
       map: RegistryItemPutCollection,
-      architecture: Architecture
+      architecture: Architecture,
     ): Promise<void>;
 
     export namespace arch {
       export function list<K extends string>(
-        keys: readonly K[]
+        keys: readonly K[],
       ): Promise<RegistryItemCollection<typeof keys>>;
       export function list32<K extends string>(
-        keys: readonly K[]
+        keys: readonly K[],
       ): Promise<RegistryItemCollection<typeof keys>>;
       export function list64<K extends string>(
-        keys: readonly K[]
+        keys: readonly K[],
       ): Promise<RegistryItemCollection<typeof keys>>;
       export function createKey(keys: readonly string[]): Promise<void>;
       export function createKey32(keys: readonly string[]): Promise<void>;

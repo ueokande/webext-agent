@@ -10,7 +10,7 @@ test("should retry until callback succeeds", async () => {
       }
       throw new Error("should retry");
     },
-    { interval: 0, attempts: 10 }
+    { interval: 0, attempts: 10 },
   );
 
   expect(attempts).toBe(5);
@@ -26,7 +26,7 @@ test("should retry until async callback succeeds", async () => {
       }
       throw new Error("should retry");
     },
-    { interval: 0, attempts: 10 }
+    { interval: 0, attempts: 10 },
   );
 
   expect(attempts).toBe(5);
@@ -40,8 +40,8 @@ test("should retires when callback fails", async () => {
         attempts++;
         throw new Error("should retry");
       },
-      { interval: 0, attempts: 10 }
-    )
+      { interval: 0, attempts: 10 },
+    ),
   ).rejects.toThrow("should retry");
 
   expect(attempts).toBe(10);
@@ -55,7 +55,7 @@ test("should retires when async callback fails", async () => {
         attempts++;
         throw new Error("should retry");
       },
-      { interval: 0, attempts: 10 }
+      { interval: 0, attempts: 10 },
     );
   }).rejects.toThrow("should retry");
 

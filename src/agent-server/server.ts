@@ -9,7 +9,7 @@ const start = (port: number, rcp: RPCClient, logger: Logger) => {
   fastify.register(
     newApiRoute((method: string, args: unknown[]) => {
       return rcp.request({ method, args });
-    })
+    }),
   );
   fastify.register(newHealthRoute());
   fastify.listen({ port });

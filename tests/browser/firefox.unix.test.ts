@@ -28,7 +28,7 @@ maybe("UnixManager", () => {
 
     expect(await manager.test()).toBeTruthy();
     expect(await fs.promises.readFile(manifestPath, "utf-8")).toContain(
-      binPath.replace("\\", "\\\\")
+      binPath.replace("\\", "\\\\"),
     );
 
     await manager.uninstall();

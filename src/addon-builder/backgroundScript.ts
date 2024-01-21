@@ -5,7 +5,7 @@ const BACKGROUND_SCRIPT_TEMPLATE = path.join(
   "..",
   "..",
   "resources",
-  "background_script_template.js"
+  "background_script_template.js",
 );
 
 const getTemplatePath = () => BACKGROUND_SCRIPT_TEMPLATE;

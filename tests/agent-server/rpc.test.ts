@@ -71,7 +71,7 @@ describe("RPCClientImpl", () => {
     rpc.start();
 
     await expect(() =>
-      rpc.request({ type: "twice", value: 10 })
+      rpc.request({ type: "twice", value: 10 }),
     ).rejects.toThrowError("operation failure");
   });
 

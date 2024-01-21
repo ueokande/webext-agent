@@ -28,7 +28,7 @@ type AddonOptions = {
 
 const createAgentAddon = async (
   destDir: string,
-  { additionalPermissions = [] }: AddonOptions = {}
+  { additionalPermissions = [] }: AddonOptions = {},
 ): Promise<Addon> => {
   if (fs.existsSync(destDir)) {
     await fs.promises.rm(destDir, { recursive: true });
@@ -42,11 +42,11 @@ const createAgentAddon = async (
   });
   await fs.promises.copyFile(
     getTemplatePath(),
-    path.join(destDir, agentBackgroundScriptName)
+    path.join(destDir, agentBackgroundScriptName),
   );
   await fs.promises.writeFile(
     path.join(destDir, "manifest.json"),
-    JSON.stringify(manifest, null, 2)
+    JSON.stringify(manifest, null, 2),
   );
   return new TemporaryAddon(destDir);
 };
@@ -54,7 +54,7 @@ const createAgentAddon = async (
 const createMixedInAgentAddon = async (
   baseAddonDir: string,
   destDir: string,
-  { additionalPermissions }: AddonOptions = {}
+  { additionalPermissions }: AddonOptions = {},
 ): Promise<Addon> => {
   if (fs.existsSync(destDir)) {
     await fs.promises.rm(destDir, { recursive: true });
@@ -64,8 +64,8 @@ const createMixedInAgentAddon = async (
   const baseManifest = JSON.parse(
     await fs.promises.readFile(
       path.join(baseAddonDir, "manifest.json"),
-      "utf-8"
-    )
+      "utf-8",
+    ),
   );
 
   const agentBackgroundScriptName = `${uuidv4()}.js`;
@@ -76,11 +76,11 @@ const createMixedInAgentAddon = async (
   await fs.promises.cp(baseAddonDir, destDir, { recursive: true });
   await fs.promises.copyFile(
     getTemplatePath(),
-    path.join(destDir, agentBackgroundScriptName)
+    path.join(destDir, agentBackgroundScriptName),
   );
   await fs.promises.writeFile(
     path.join(destDir, "manifest.json"),
-    JSON.stringify(manifest, null, 2)
+    JSON.stringify(manifest, null, 2),
   );
   return new TemporaryAddon(destDir);
 };

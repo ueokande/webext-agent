@@ -7,7 +7,7 @@ type RetryOptions = {
 
 const retryer = async <R>(
   f: () => R | Promise<R>,
-  opts: RetryOptions
+  opts: RetryOptions,
 ): Promise<R> => {
   let attempt = 1;
   for (;;) {

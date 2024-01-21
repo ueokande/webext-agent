@@ -11,7 +11,7 @@ fastify.register(
       throw new Error("tabs.query does not work");
     }
     throw new Error("unsupported operation: " + method);
-  })
+  }),
 );
 
 test("should returns a response with status 200", async () => {
@@ -34,6 +34,6 @@ test("should returns 500 on invalid body", async () => {
 
   expect(resp.statusCode).toBe(500);
   expect(JSON.parse(resp.body).message).toEqual(
-    expect.stringMatching("tabs.query does not work")
+    expect.stringMatching("tabs.query does not work"),
   );
 });
