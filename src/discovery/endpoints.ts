@@ -2,7 +2,6 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import os from "node:os";
 import { z } from "zod";
-import { AddonLocation } from "./types";
 
 const DEFAULT_DATA_DIR = path.join(os.tmpdir(), "webext-agent");
 const DEFAULT_STORAGE_PATH = path.join(DEFAULT_DATA_DIR, "endpoints.state");
@@ -11,7 +10,6 @@ const EndpointStorageSchemaV1 = z.object({
   version: z.literal(1),
   endpoints: z.array(
     z.object({
-      profilePath: z.string(),
       addonId: z.string(),
       address: z.string(),
       port: z.number(),
@@ -30,30 +28,25 @@ export class EndpointDiscovery {
   constructor(private readonly storagePath: string = DEFAULT_STORAGE_PATH) {}
 
   async installAddon(
-    { profilePath, addonId }: AddonLocation,
+    addonId: string,
     { address, port }: Endpoint,
   ): Promise<void> {
     const state = await this.loadOrCreate();
-    state.endpoints.push({ profilePath, addonId, address, port });
+    state.endpoints.push({ addonId, address, port });
     await this.save(state);
   }
 
-  async uninstallAddon({ profilePath, addonId }: AddonLocation): Promise<void> {
+  async uninstallAddon(addonId: string): Promise<void> {
     const state = await this.loadOrCreate();
     state.endpoints = state.endpoints.filter(
-      (entry) => entry.profilePath !== profilePath || entry.addonId !== addonId,
+      (entry) => entry.addonId !== addonId,
     );
     await this.save(state);
   }
 
-  async resolveEndpoint({
-    profilePath,
-    addonId,
-  }: AddonLocation): Promise<Endpoint | null> {
+  async resolveEndpoint(addonId: string): Promise<Endpoint | null> {
     const state = await this.loadOrCreate();
-    const entry = state.endpoints.find(
-      (entry) => entry.profilePath === profilePath && entry.addonId === addonId,
-    );
+    const entry = state.endpoints.find((entry) => entry.addonId === addonId);
     if (entry) {
       return { address: entry.address, port: entry.port };
     }
