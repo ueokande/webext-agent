@@ -1,11 +1,10 @@
 import path from "node:path";
-import os from "node:os";
 import fs from "node:fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-const DEFAULT_LOG_DIR = path.join(os.tmpdir(), "webext-agent", "logs");
-const STATE_FILENAME = "state.json";
+const LOG_DIRNAME = "logs";
+const STATE_FILENAME = "log-state.json";
 
 const LogStateSchemaV1 = z.object({
   version: z.literal(1),
@@ -20,7 +19,13 @@ const LogStateSchemaV1 = z.object({
 type LogStateSchemaV1 = z.infer<typeof LogStateSchemaV1>;
 
 export class LogDiscovery {
-  constructor(private readonly logDir: string = DEFAULT_LOG_DIR) {}
+  private readonly logDir: string;
+  private readonly stateFile: string;
+
+  constructor(dataDir: string) {
+    this.logDir = path.join(dataDir, LOG_DIRNAME);
+    this.stateFile = path.join(dataDir, STATE_FILENAME);
+  }
 
   async resolvePath(addonId: string): Promise<string | null> {
     const state = await this.loadOrCreateState();
@@ -41,6 +46,7 @@ export class LogDiscovery {
     const logPath = path.join(this.logDir, `${uuidv4()}.log`);
     state.entries.push({ addonId, logPath });
     await this.saveState(state);
+    await fs.mkdir(path.dirname(logPath), { recursive: true });
     await fs.appendFile(logPath, Buffer.from([]));
     return logPath;
   }
@@ -48,10 +54,7 @@ export class LogDiscovery {
   private async loadOrCreateState(): Promise<LogStateSchemaV1> {
     const content = await (async () => {
       try {
-        return await fs.readFile(
-          path.join(this.logDir, STATE_FILENAME),
-          "utf-8",
-        );
+        return await fs.readFile(this.stateFile, "utf-8");
       } catch (e: any) {
         if (e.code === "ENOENT") {
           return null;
@@ -66,9 +69,9 @@ export class LogDiscovery {
   }
 
   private async saveState(state: LogStateSchemaV1): Promise<void> {
-    const tmpfile = path.join(this.logDir, `${STATE_FILENAME}.tmp`);
-    await fs.mkdir(this.logDir, { recursive: true });
+    const tmpfile = `${this.stateFile}.${process.pid}`;
+    await fs.mkdir(path.dirname(this.stateFile), { recursive: true });
     await fs.writeFile(tmpfile, JSON.stringify(state));
-    await fs.rename(tmpfile, path.join(this.logDir, STATE_FILENAME));
+    await fs.rename(tmpfile, this.stateFile);
   }
 }

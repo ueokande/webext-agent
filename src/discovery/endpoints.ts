@@ -1,10 +1,8 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-import os from "node:os";
 import { z } from "zod";
 
-const DEFAULT_DATA_DIR = path.join(os.tmpdir(), "webext-agent");
-const DEFAULT_STORAGE_PATH = path.join(DEFAULT_DATA_DIR, "endpoints.state");
+const ENDPOINTS_JSON_FILE = "endpoints.json";
 
 const EndpointStorageSchemaV1 = z.object({
   version: z.literal(1),
@@ -25,7 +23,11 @@ type Endpoint = {
 };
 
 export class EndpointDiscovery {
-  constructor(private readonly storagePath: string = DEFAULT_STORAGE_PATH) {}
+  private readonly storagePath;
+
+  constructor(dataDir: string) {
+    this.storagePath = path.join(dataDir, ENDPOINTS_JSON_FILE);
+  }
 
   async installAddon(
     addonId: string,
