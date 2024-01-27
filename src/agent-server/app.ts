@@ -17,13 +17,15 @@ const scheduleGracefulShutdown = (
   server: { close: () => Promise<void> },
   logger: Logger,
 ) => {
-  process.on("SIGINT", async () => {
-    setTimeout(() => {
-      logger.error("Could not close server gracefully");
-      process.exit(1);
-    }, 3000);
-    await server.close();
-    process.exit();
+  ["SIGINT", "SIGTERM"].forEach((signal) => {
+    process.on(signal, async () => {
+      setTimeout(() => {
+        logger.error("Could not close server gracefully");
+        process.exit(1);
+      }, 3000);
+      await server.close();
+      process.exit();
+    });
   });
 };
 
