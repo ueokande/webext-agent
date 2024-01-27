@@ -33,7 +33,7 @@ Create a new agent add-on:
 
 ```console
 $ webext-agent create-addon \
-    --additional-permissions tabs
+    --additional-permissions tabs \
     --addon-id my-addon@example.com
     /tmp/my-agent-addon
 ```
@@ -85,10 +85,10 @@ $ webext-agent install
 Create a new agent add-on.
 
 ```console
-$ webext-agent create-addon
-    --additional-permissions <permission1>,<permission2>,...
-    --addon-id <addon-id>
-    [--base-addon <base-addon>]
+$ webext-agent create-addon \
+    --additional-permissions <permission1>,<permission2>,... \
+    --addon-id <addon-id> \
+    [--base-addon <base-addon>] \
     <destination>
 ```
 
