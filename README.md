@@ -14,18 +14,28 @@ $ yarn add webext-agent            # yarn
 $ pnpx webext-agent install        # pnpm
 ```
 
-Then install the native messaging manifest to the local:
+## Preparation
+
+The webext-agent access the browser via [native messaging][].  It requires a
+native messaging manifest to be installed to the local.  The webext-agent does
+not install the manifest automatically due to the security reason.  You can
+install it manually by the following command:
 
 ```console
-$ ./node_modules/.bin/webext-agent install
+$ webext-agent install --addon-ids my-addon1@example.com,my-addon2@example.com,...
 ```
+
+[native messaging]: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
 
 ## Quick start
 
 Create a new agent add-on:
 
 ```console
-$ webext-agent create-addon --additional-permissions tabs /tmp/my-agent-addon
+$ webext-agent create-addon \
+    --additional-permissions tabs
+    --addon-id my-addon@example.com
+    /tmp/my-agent-addon
 ```
 
 and load it via `about:config` on your Firefox browser.
@@ -35,7 +45,7 @@ The agent server starts and you can access APIs by the following JavaScript/Type
 const { connect } = require("webext-agent");
 
 (async () => {
-  const browser = await connect("127.0.0.1:12345");
+  const browser = await connect("my-addon@example.com");
   const tabs = await browser.tabs.query({});
 
   tabs.forEach((tab) => {
@@ -51,8 +61,7 @@ const { connect } = require("webext-agent");
 Install a native messaging manifest to the local
 
 ```console
-$ webext-agent install
-Installed native message manifest at /home/alice/.mozilla/native-messaging-hosts/demo.ueokande.webext_agent.json
+$ webext-agent install --addon-ids my-addon1@example.com,my-addon2@example.com,...
 ```
 
 ### uninstall
@@ -61,7 +70,6 @@ Uninstall the installed native messaging manifest from the local.
 
 ```console
 $ webext-agent uninstall
-Uninstalled native message manifest from /home/alice/.mozilla/native-messaging-hosts/demo.ueokande.webext_agent.json
 ```
 
 ### check
@@ -70,7 +78,6 @@ Check if the native message manifest is installed.
 
 ```console
 $ webext-agent install
-Installed native message manifest at /home/alice/.mozilla/native-messaging-hosts/demo.ueokande.webext_agent.json
 ```
 
 ### create-addon
@@ -78,15 +85,15 @@ Installed native message manifest at /home/alice/.mozilla/native-messaging-hosts
 Create a new agent add-on.
 
 ```console
-$ webext-agent create-addon --additional-permissions tabs /tmp/my-agent-addon
+$ webext-agent create-addon
+    --additional-permissions <permission1>,<permission2>,...
+    --addon-id <addon-id>
+    [--base-addon <base-addon>]
+    <destination>
 ```
 
 You can mix-in an agent add-on with your add-ons by `--base-addon` option.
 This is useful to debug or access the internal storage on your add-on.
-
-```console
-$ webext-agent create-addon --base-addon ~/workspace/my-addon /tmp/my-agent-addon
-```
 
 ## JavaScript/TypeScript API
 
@@ -112,6 +119,7 @@ console.log(addon.getRoot());
 - `destination` Destination directory to create an agent add-on.
 - `options`
     - `additionalPermissions` Additional permissions to be added to the add-on.
+    - `addonId` An id of the Addon
 
 ```typescript
 import { createMixedInAgentAddon } from "webext-agent";
