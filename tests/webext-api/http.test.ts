@@ -75,7 +75,7 @@ describe("connect with an addon", () => {
   });
 });
 
-describe.only("connect with an addon id", () => {
+describe("connect with an addon id", () => {
   const fastify = Fastify();
   let tmpdir: string;
   let capture: { url: string; body: unknown } | undefined = undefined;
