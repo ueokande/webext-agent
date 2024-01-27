@@ -34,6 +34,9 @@ export class EndpointDiscovery {
     { address, port }: Endpoint,
   ): Promise<void> {
     const state = await this.loadOrCreate();
+    state.endpoints = state.endpoints.filter(
+      (entry) => entry.addonId !== addonId,
+    );
     state.endpoints.push({ addonId, address, port });
     await this.save(state);
   }

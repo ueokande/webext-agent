@@ -15,12 +15,12 @@ describe("EndpointDiscovery", () => {
   });
 
   test("discover endpoints", async () => {
-    const p1 = new EndpointDiscovery(path.join(tmpdir, "endpoints.json"));
+    const p1 = new EndpointDiscovery(tmpdir);
 
     await p1.installAddon("addon1", { address: "127.0.0.1", port: 10000 });
     await p1.installAddon("addon2", { address: "127.0.0.1", port: 10001 });
 
-    const p2 = new EndpointDiscovery(path.join(tmpdir, "endpoints.json"));
+    const p2 = new EndpointDiscovery(tmpdir);
     await expect(p2.resolveEndpoint("addon1")).resolves.toEqual({
       address: "127.0.0.1",
       port: 10000,
@@ -30,5 +30,18 @@ describe("EndpointDiscovery", () => {
       port: 10001,
     });
     await expect(p2.resolveEndpoint("addon3")).resolves.toBeNull();
+  });
+
+  test("overwrite endpoints", async () => {
+    const p1 = new EndpointDiscovery(tmpdir);
+
+    await p1.installAddon("addon1", { address: "127.0.0.1", port: 10000 });
+    await p1.installAddon("addon1", { address: "127.0.0.1", port: 10001 });
+
+    const p2 = new EndpointDiscovery(tmpdir);
+    await expect(p2.resolveEndpoint("addon1")).resolves.toEqual({
+      address: "127.0.0.1",
+      port: 10001,
+    });
   });
 });
