@@ -38,7 +38,7 @@ jobs:
       if: runner.os == 'Windows'
     - run: npm install --global webext-agent-*.tgz
       if: runner.os != 'Windows'
-    - run: webext-agent install
+    - run: webext-agent install --addon-ids "deadbeef@example.com,bareaddon@example.com"
     - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test
       if: runner.os == 'Linux'
     - run: pnpm run test

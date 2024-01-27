@@ -2,42 +2,27 @@ import * as os from "node:os";
 import path from "node:path";
 import { program } from "commander";
 import { Application } from "../../agent-server";
-import pino from "pino";
 
-const defaultPort = 12345;
-const logPath = path.join(os.tmpdir(), "webext-agent.log");
+const DEFAULT_DATA_DIR = path.join(os.tmpdir(), "webext-agent");
 
-program.option(
-  "-p, --port <number>",
-  `Port number to be listen on (defualt: ${defaultPort})`,
-);
-program.parse();
+program
+  .argument("<manifest>", "Path to native messaging manifest")
+  .argument("<addon_id>", "Addon ID")
+  .option("-p, --port <number>", `Port number to be listen on`)
+  .option("-d, --data-dir <path>", `Path to data directory`, DEFAULT_DATA_DIR)
+  .parse();
 
 const opts = program.opts();
-const port = Number(opts.port ?? defaultPort);
 
-if (isNaN(port)) {
+if (typeof opts.port !== "undefined" && isNaN(Number(opts.port))) {
   console.error("invalid option --port");
   process.exit(2);
 }
 
-process.stderr.write(
-  `This application is a agent server for webext-agent and does not expect run manually
-You can see server logs at the following path:
-
-  ${logPath}
-
-`,
-);
-
 const app = new Application({
-  port,
-  logger: pino(
-    {
-      timestamp: pino.stdTimeFunctions.isoTime,
-    },
-    pino.destination(logPath),
-  ),
+  addonId: program.args[1],
+  port: opts.port,
+  dataDir: opts.dataDir,
   stdin: process.stdin,
   stdout: process.stdout,
 });

@@ -1,4 +1,4 @@
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import {
@@ -34,38 +34,34 @@ describe("createAgentAddon", () => {
   let addon: Addon;
 
   beforeEach(async () => {
-    const root = await fs.promises.mkdtemp(
+    const root = await fs.mkdtemp(
       path.join(os.tmpdir(), "webext-agent-addon-"),
     );
     addon = await createAgentAddon(root, {
       additionalPermissions: ["bookmarks"],
+      addonId: "my-addon@example.com",
     });
   });
 
   afterEach(async () => {
-    await fs.promises.rm(addon.getRoot(), { recursive: true });
+    await fs.rm(addon.getRoot(), { recursive: true });
   });
 
   test("should create a new agent addon", async () => {
-    await expect(async () =>
-      fs.promises.access(addon.getPath("manifest.json")),
-    ).not.toThrowError();
-
     const manifest = JSON.parse(
-      (await fs.promises.readFile(addon.getPath("manifest.json"))).toString(),
+      await fs.readFile(addon.getPath("manifest.json"), "utf-8"),
     );
     expect(manifest.permissions).toEqual(["nativeMessaging", "bookmarks"]);
     expect(manifest.background.scripts).toHaveLength(1);
+    expect(manifest.browser_specific_settings.gecko.id).toBe(
+      "my-addon@example.com",
+    );
 
     const backgroundScript = manifest.background.scripts[0];
     expect(backgroundScript).toMatch(/.js/);
-    await expect(async () =>
-      fs.promises.access(addon.getPath(backgroundScript)),
-    ).not.toThrowError();
-
-    expect(
-      await fs.promises.readFile(addon.getPath(backgroundScript), "utf-8"),
-    ).toMatch(/"use strict"/);
+    expect(await fs.readFile(addon.getPath(backgroundScript), "utf-8")).toMatch(
+      /"use strict"/,
+    );
   });
 });
 
@@ -73,7 +69,7 @@ describe("createMixedInAgentAddon", () => {
   let addon: Addon;
 
   beforeEach(async () => {
-    const root = await fs.promises.mkdtemp(
+    const root = await fs.mkdtemp(
       path.join(os.tmpdir(), "webext-agent-addon-"),
     );
     addon = await createMixedInAgentAddon(
@@ -84,15 +80,12 @@ describe("createMixedInAgentAddon", () => {
   });
 
   afterEach(async () => {
-    await fs.promises.rm(addon.getRoot(), { recursive: true });
+    await fs.rm(addon.getRoot(), { recursive: true });
   });
 
   test("should create a mixed-in agent addon", async () => {
-    await expect(async () =>
-      fs.promises.access(addon.getPath("manifest.json")),
-    ).not.toThrowError();
     const manifest = JSON.parse(
-      (await fs.promises.readFile(addon.getPath("manifest.json"))).toString(),
+      (await fs.readFile(addon.getPath("manifest.json"))).toString(),
     );
     expect(manifest.permissions).toEqual([
       "tabs",
@@ -102,18 +95,12 @@ describe("createMixedInAgentAddon", () => {
     expect(manifest.background.scripts).toHaveLength(2);
     expect(manifest.background.scripts[0]).toMatch("background.js");
     expect(
-      await fs.promises.readFile(
-        addon.getPath(manifest.background.scripts[0]),
-        "utf-8",
-      ),
+      await fs.readFile(addon.getPath(manifest.background.scripts[0]), "utf-8"),
     ).toMatch(/0xDEADBEEF/);
 
     expect(manifest.background.scripts[1]).toMatch(UUIDJSPattern);
     expect(
-      await fs.promises.readFile(
-        addon.getPath(manifest.background.scripts[1]),
-        "utf-8",
-      ),
+      await fs.readFile(addon.getPath(manifest.background.scripts[1]), "utf-8"),
     ).toMatch(/"use strict"/);
   });
 });

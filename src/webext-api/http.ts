@@ -1,7 +1,10 @@
-import { setTimeout } from "node:timers/promises";
 import axios from "axios";
 import type { AddressInfo } from "node:net";
+import path from "node:path";
+import os from "node:os";
+import { retryer } from "./retryer";
 import { createAPIs } from "./factory";
+import { EndpointDiscovery } from "../discovery/endpoints";
 
 type Browser = typeof browser;
 
@@ -41,31 +44,48 @@ const createRemoteAPIs = (address: string | AddressInfo): Browser => {
   });
 };
 
-const connect = async (address: string | AddressInfo): Promise<Browser> => {
-  let addr = address;
-  if (typeof address !== "string") {
-    addr = `${address.address}:${address.port}`;
-  }
+type ConnectOptions = {
+  attempts?: number;
+  dataDir?: string;
+};
 
-  let attempt = 1;
-  for (;;) {
-    try {
-      await axios.get(`http://${addr}/health`);
-    } catch (err) {
-      if (attempt >= 3) {
-        throw err;
-      }
-      attempt++;
+const DefaultConnectOptions = {
+  attempts: 3,
+  dataDir: path.join(os.tmpdir(), "webext-agent"),
+};
 
-      await setTimeout(500);
-      continue;
+const connect = async (
+  location: string | AddressInfo,
+  {
+    attempts = DefaultConnectOptions.attempts,
+    dataDir = DefaultConnectOptions.dataDir,
+  }: ConnectOptions = DefaultConnectOptions,
+): Promise<Browser> => {
+  const address = await (async () => {
+    if (typeof location !== "string") {
+      return `${location.address}:${location.port}`;
     }
-    break;
-  }
+
+    const [, port] = location.split(":");
+    if (!Number.isNaN(Number(port))) {
+      return location;
+    }
+    const endpointDiscovery = new EndpointDiscovery(dataDir);
+    const addr = await endpointDiscovery.resolveEndpoint(location);
+    if (addr === null) {
+      throw new Error(`Cannot resolve endpoint for ${location}`);
+    }
+    return `${addr.address}:${addr.port}`;
+  })();
+
+  await retryer(async () => axios.get(`http://${address}/health`), {
+    interval: 500,
+    attempts,
+  });
 
   return createAPIs(async (method, args) => {
     try {
-      const url = `http://${addr}/api/${method}`;
+      const url = `http://${address}/api/${method}`;
       const json = { args };
       const resp = await axios.post(url, json);
       return resp.data;

@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import * as os from "node:os";
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 import regedit from "regedit";
 import { WindowsManager } from "../../src/browser/firefox";
 
@@ -9,11 +9,12 @@ const maybe = process.platform === "win32" ? describe : describe.skip;
 maybe("WindowsManager", () => {
   test("install and uninstall a native message manifest", async () => {
     const binPath = path.join(os.homedir(), "bin", "webext-agent");
+    const addonIds = ["addon1@example.com", "addon2@example.com"];
     const manager = new WindowsManager(binPath);
     const keyName =
       "HKCU\\SOFTWARE\\Mozilla\\NativeMessagingHosts\\demo.ueokande.webext_agent";
 
-    await manager.install();
+    await manager.install(addonIds);
     expect(await manager.test()).toBeTruthy();
 
     const key1 = await regedit.promisified.list([keyName]);
@@ -25,9 +26,9 @@ maybe("WindowsManager", () => {
     expect(item.type).toBe("REG_SZ");
     expect(item.value).toMatch(/^C:\\.*.json$/);
 
-    expect(await fs.promises.readFile(item.value as string, "utf-8")).toContain(
-      binPath.replace(/\\/g, "\\\\"),
-    );
+    const json = JSON.parse(await fs.readFile(item.value as string, "utf-8"));
+    expect(json.path).toBe(binPath);
+    expect(json.allowed_extensions).toEqual(addonIds);
 
     await manager.uninstall();
     expect(await manager.test()).toBeFalsy();

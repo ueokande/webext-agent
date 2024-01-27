@@ -24,12 +24,17 @@ class TemporaryAddon implements Addon {
 
 type AddonOptions = {
   additionalPermissions?: string[];
+  addonId?: string;
 };
 
 const createAgentAddon = async (
   destDir: string,
-  { additionalPermissions = [] }: AddonOptions = {},
+  { additionalPermissions = [], addonId }: AddonOptions = {},
 ): Promise<Addon> => {
+  if (typeof addonId === "undefined") {
+    throw new Error("addonId is required");
+  }
+
   if (fs.existsSync(destDir)) {
     await fs.promises.rm(destDir, { recursive: true });
   }
@@ -39,6 +44,7 @@ const createAgentAddon = async (
   const manifest = buildManifest({
     agentBackgroundScriptName,
     additionalPermissions,
+    addonId,
   });
   await fs.promises.copyFile(
     getTemplatePath(),
@@ -54,7 +60,7 @@ const createAgentAddon = async (
 const createMixedInAgentAddon = async (
   baseAddonDir: string,
   destDir: string,
-  { additionalPermissions }: AddonOptions = {},
+  { additionalPermissions, addonId }: AddonOptions = {},
 ): Promise<Addon> => {
   if (fs.existsSync(destDir)) {
     await fs.promises.rm(destDir, { recursive: true });
@@ -72,6 +78,7 @@ const createMixedInAgentAddon = async (
   const manifest = buildMixedInManifest(baseManifest, {
     agentBackgroundScriptName,
     additionalPermissions,
+    addonIdOverride: addonId,
   });
   await fs.promises.cp(baseAddonDir, destDir, { recursive: true });
   await fs.promises.copyFile(

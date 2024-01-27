@@ -47,7 +47,8 @@
     "pino": "^8.17.2",
     "regedit": "5.1.2",
     "tslib": "^2.6.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zod": "^3.22.4"
   },
   "bin": {
     "webext-agent": "./bin/webext-agent.js",

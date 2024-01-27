@@ -16,6 +16,7 @@ describe("bare agent addon", () => {
 
     const addon = await createAgentAddon(root, {
       additionalPermissions: ["tabs"],
+      addonId: "bareaddon@example.com",
     });
 
     const browserTypeWithExtension = withExtension(firefox, addon.getRoot());
@@ -31,7 +32,7 @@ describe("bare agent addon", () => {
     const page = await browserContext.newPage();
     await page.goto("https://example.com/");
 
-    const browser = await connect("127.0.0.1:12345");
+    const browser = await connect("bareaddon@example.com");
     const tabs = await browser.tabs.query({});
 
     expect(tabs).toHaveLength(1);
@@ -65,7 +66,7 @@ describe("mixed-in agent addon", () => {
     const page = await browserContext.newPage();
     await page.goto("https://example.com/");
 
-    const browser = await connect("127.0.0.1:12345");
+    const browser = await connect("deadbeef@example.com");
     expect(await browser.storage.local.get("string")).toEqual({
       string: "dead beef",
     });
