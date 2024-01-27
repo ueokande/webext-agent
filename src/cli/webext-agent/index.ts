@@ -6,9 +6,16 @@ import {
   createMixedInAgentAddon,
 } from "../../addon-builder/addon";
 
-const install = async () => {
+const install = async (options: any) => {
   const manager = createManager(process.platform, await resolveAgentServer());
-  await manager.install();
+  const addonIds = options.addonIds?.split(",") ?? [];
+  await manager.install(addonIds);
+
+  if (addonIds.length === 0) {
+    console.warn(
+      "The native message manifest will be installed but no addon will work.  Please specify addon IDs with --addon-ids option.",
+    );
+  }
   console.error(
     "Installed native message manifest at",
     manager.getManifestPath(),
@@ -44,15 +51,29 @@ const createAddon = async (destination: string, options: any) => {
   if (typeof options.baseAddon === "string") {
     createMixedInAgentAddon(options.baseAddon, destination, {
       additionalPermissions,
+      addonId: options.addonId,
     });
   } else {
-    createAgentAddon(destination, { additionalPermissions });
+    if (typeof options.addonId === "undefined") {
+      program.error(
+        "The --addon-id option is required when creating a new addon",
+        { exitCode: 1 },
+      );
+    }
+    createAgentAddon(destination, {
+      additionalPermissions,
+      addonId: options.addonId,
+    });
   }
 };
 
 program
   .command("install")
   .description("Install a native messaging manifest to the local")
+  .option(
+    "--addon-ids <addon-id1>,<addon-id2>,...",
+    "Comma-separated addon IDs",
+  )
   .action(install);
 program
   .command("uninstall")
@@ -75,6 +96,10 @@ program
   .option(
     "--additional-permissions <perm1,perm2,...>",
     "Comma-separated additional permissions",
+  )
+  .option(
+    "--addon-id <addon-id>",
+    "The addon ID to be used or overwritten in the manifest",
   )
   .action(createAddon);
 

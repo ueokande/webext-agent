@@ -2,7 +2,6 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import regedit, { type RegistryItem } from "regedit";
-import { addonGeckoId } from "../addon-builder/manifest";
 
 const APP_NAME = "demo.ueokande.webext_agent";
 
@@ -11,29 +10,37 @@ type NativeMessagingManifest = {
   description: string;
   type: "stdio";
   path: string;
-  allowed_extensions: Array<string>;
+  allowed_extensions: string[];
 };
 
 const getNativeMessagingManifest = (
   binPath: string,
+  allowedExtensions: string[],
 ): NativeMessagingManifest => {
   return {
     name: APP_NAME,
     description: "webext-agent",
     path: binPath,
     type: "stdio",
-    allowed_extensions: [addonGeckoId()],
+    allowed_extensions: [...allowedExtensions],
   };
 };
 
-const getNativeMessagingManifestJson = (binPath: string): string => {
-  return JSON.stringify(getNativeMessagingManifest(binPath), null, 2);
+const getNativeMessagingManifestJson = (
+  binPath: string,
+  allowedExtensions: string[],
+): string => {
+  return JSON.stringify(
+    getNativeMessagingManifest(binPath, allowedExtensions),
+    null,
+    2,
+  );
 };
 
 // NativeMessagingManifestManager sets-up a native messaging manifest to local filesystem
 // ref: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests#Manifest_location
 interface NativeMessagingManifestManager {
-  install(): Promise<void>;
+  install(addonIds: string[]): Promise<void>;
   uninstall(): Promise<void>;
   test(): Promise<boolean>;
 }
@@ -47,14 +54,14 @@ class UnixManager implements NativeMessagingManifestManager {
     this.binPath = binPath;
   }
 
-  async install(): Promise<void> {
+  async install(addonIds: string[]): Promise<void> {
     const dir = path.dirname(this.manifestPath);
     const basename = path.basename(this.manifestPath);
     await fs.promises.mkdir(dir, { recursive: true });
     const fullpath = path.join(dir, basename);
     await fs.promises.writeFile(
       fullpath,
-      getNativeMessagingManifestJson(this.binPath),
+      getNativeMessagingManifestJson(this.binPath, addonIds),
     );
   }
 
@@ -91,8 +98,8 @@ class WindowsManager implements NativeMessagingManifestManager {
     this.binPath = binPath;
   }
 
-  async install(): Promise<void> {
-    await this.createManifest();
+  async install(addonIds: string[]): Promise<void> {
+    await this.createManifest(addonIds);
     await this.createRegistryEntry();
   }
 
@@ -136,13 +143,13 @@ class WindowsManager implements NativeMessagingManifestManager {
     await regedit.promisified.deleteKey([this.registryKeyName]);
   }
 
-  private async createManifest(): Promise<void> {
+  private async createManifest(addonIds: string[]): Promise<void> {
     const dir = path.dirname(this.manifestPath);
     await fs.promises.mkdir(dir, { recursive: true });
     const fullpath = path.join(dir, `${APP_NAME}.json`);
     await fs.promises.writeFile(
       fullpath,
-      getNativeMessagingManifestJson(this.binPath),
+      getNativeMessagingManifestJson(this.binPath, addonIds),
     );
   }
 

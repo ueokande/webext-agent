@@ -6,36 +6,48 @@ const DEFAULT_MANIFEST = {
   name: "webext-agent",
   description: "An agent to invoke WebExtensions APIs via remote",
   version: "0.0.1",
-  browser_specific_settings: {
-    gecko: {
-      id: "{daf44bf7-a45e-4450-979c-91cf07434c3d}",
-    },
-  },
   permissions: ["nativeMessaging"],
 };
 
-type manifestOptions = {
+type BuildManifestOption = {
   additionalPermissions?: Permissions;
   agentBackgroundScriptName: string;
+  addonId: string;
 };
 
 const buildManifest = ({
   additionalPermissions = [],
   agentBackgroundScriptName,
-}: manifestOptions): WebExtensionManifest => {
+  addonId,
+}: BuildManifestOption): WebExtensionManifest => {
   const manifest: WebExtensionManifest = {
     ...DEFAULT_MANIFEST,
     permissions: DEFAULT_MANIFEST.permissions.concat(additionalPermissions),
     background: {
       scripts: [agentBackgroundScriptName],
     },
+    browser_specific_settings: {
+      gecko: {
+        id: addonId,
+      },
+    },
   };
   return manifest;
 };
 
+type BuildMixedInManifestOption = {
+  additionalPermissions?: Permissions;
+  agentBackgroundScriptName: string;
+  addonIdOverride?: string;
+};
+
 const buildMixedInManifest = (
   baseManifest: WebExtensionManifest,
-  { additionalPermissions = [], agentBackgroundScriptName }: manifestOptions,
+  {
+    additionalPermissions = [],
+    agentBackgroundScriptName,
+    addonIdOverride,
+  }: BuildMixedInManifestOption,
 ): WebExtensionManifest => {
   const permissions = (baseManifest.permissions ?? [])
     .concat(DEFAULT_MANIFEST.permissions)
@@ -49,10 +61,13 @@ const buildMixedInManifest = (
   };
   const browser_specific_settings = {
     ...baseManifest.browser_specific_settings,
-    gecko: {
-      id: DEFAULT_MANIFEST.browser_specific_settings.gecko.id,
-    },
   };
+  if (addonIdOverride) {
+    if (!browser_specific_settings.gecko) {
+      browser_specific_settings.gecko = {};
+    }
+    browser_specific_settings.gecko.id = addonIdOverride;
+  }
   const manifest: WebExtensionManifest = {
     ...baseManifest,
     browser_specific_settings,
@@ -62,6 +77,4 @@ const buildMixedInManifest = (
   return manifest;
 };
 
-const addonGeckoId = () => DEFAULT_MANIFEST.browser_specific_settings.gecko.id;
-
-export { buildManifest, buildMixedInManifest, addonGeckoId };
+export { buildManifest, buildMixedInManifest };
