@@ -61,7 +61,7 @@ const connect = async (
     dataDir = DefaultConnectOptions.dataDir,
   }: ConnectOptions = DefaultConnectOptions,
 ): Promise<Browser> => {
-  const address = await (async () => {
+  const discoverAddress = async () => {
     if (typeof location !== "string") {
       return `${location.address}:${location.port}`;
     }
@@ -76,12 +76,16 @@ const connect = async (
       throw new Error(`Cannot resolve endpoint for ${location}`);
     }
     return `${addr.address}:${addr.port}`;
-  })();
+  };
 
-  await retryer(async () => axios.get(`http://${address}/health`), {
-    interval: 500,
-    attempts,
-  });
+  let address: string;
+  await retryer(
+    async () => {
+      address = await discoverAddress();
+      await axios.get(`http://${address}/health`);
+    },
+    { interval: 500, attempts },
+  );
 
   return createAPIs(async (method, args) => {
     try {
