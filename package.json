@@ -1,6 +1,6 @@
 {
   "name": "webext-agent",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": " An agent to enable remote WebExtensions APIs for browsers",
   "repository": "https://github.com/ueokande/webext-agent",
   "author": "Shin'ya Ueoka <ueokande@i-beam.org>",

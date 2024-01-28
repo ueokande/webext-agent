@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/ueokande/webext-agent/compare/v0.1.1...v0.2.0) (2024-01-28)
+
+
+### Features
+
+* allow multiple servers to launch in parallel ([#151](https://github.com/ueokande/webext-agent/issues/151)) ([f9b5851](https://github.com/ueokande/webext-agent/commit/f9b585180f05e880ce0fd6d7fe60cbffb52291be))
+
+
+### Bug Fixes
+
+* retry on discovery ([#152](https://github.com/ueokande/webext-agent/issues/152)) ([71faf7b](https://github.com/ueokande/webext-agent/commit/71faf7bf2ce2436ce0701927e8634ef4e9c31db2))
+
 ## [0.1.1](https://github.com/ueokande/webext-agent/compare/v0.1.0...v0.1.1) (2024-01-21)
 
 
